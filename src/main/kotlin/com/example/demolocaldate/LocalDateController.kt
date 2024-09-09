@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.reactive.function.client.WebClient
 
 @RestController
 @RequestMapping("/add-day")
@@ -14,6 +15,9 @@ class LocalDateController(
     private val springObjectMapper: ObjectMapper
 ) {
     private val myObjectMapper = ObjectMapper()
+    val webClient = WebClient.builder()
+        .baseUrl("http://localhost:8080/add-day")
+        .build()
 
     @PostMapping
     fun addDay(
@@ -54,4 +58,15 @@ class LocalDateController(
         )
     }
 
+    @PostMapping("web-client")
+    fun addDayUsingWebClient(
+        @RequestBody body: LocalDateDto
+    ): LocalDateDto {
+        return webClient
+            .post()
+            .bodyValue(body)
+            .retrieve()
+            .bodyToMono(LocalDateDto::class.java)
+            .block()!!
+    }
 }
