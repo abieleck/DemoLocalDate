@@ -15,7 +15,8 @@ class LocalDateController(
     private val springObjectMapper: ObjectMapper
 ) {
     private val myObjectMapper = ObjectMapper()
-    val webClient = WebClient.builder()
+    
+    private val webClient = WebClient.builder()
         .baseUrl("http://localhost:8080/add-day")
         .build()
 
